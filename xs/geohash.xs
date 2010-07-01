@@ -105,7 +105,6 @@ STRLEN
 precision(STRLEN lat, STRLEN lon) {
     IV lab;
     IV lob;
-warn( "latlen = %d, lonlen = %d", (int) lat, (int) lon );
     lab = (int) ( (lat * 3.32192809488736 + 1) + 8 );
     lob = (int) ( (lon * 3.32192809488736 + 1) + 9 );
     return (int) ( ( ( lab > lob ? lab : lob ) + 1 ) / 2.5 );
