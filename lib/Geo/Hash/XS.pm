@@ -27,7 +27,7 @@ Geo::Hash::XS - Geo::Hash in XS
 Geo::Hash::XS encodes and decodes geohash strings, fast. It does nothing
 else.
 
-=head1 METHOD
+=head1 METHODS
 
 =head2 $gh = Geo::Hash::XS->new()
 
@@ -40,6 +40,15 @@ given. If not given, $precision is always 32
 =head2 ($lat, $lon) = $gh->decode( $hash )
 
 Decodes $hash to $lat and $lon
+
+=head2 PERFORMANCE
+
+=item benchmark/encode.pl
+
+    precision = 5...
+              Rate  perl    xs
+    perl   13713/s    --  -99%
+    xs   1120208/s 8069%    --
 
 =head1 LICENSE
 
