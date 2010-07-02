@@ -101,6 +101,13 @@ decode(char *hash, STRLEN len, NV *lat, NV *lon) {
     *lon = (lon_max + lon_min) / 2;
 }
 
+char* NEIGHBORS[4][2] = {
+    { "bc01fg45238967deuvhjyznpkmstqrwx", "p0r21436x8zb9dcf5h7kjnmqesgutwvy" },
+    { "238967debc01fg45kmstqrwxuvhjyznp", "14365h7k9dcfesgujnmqp0r2twvyx8zb" },
+    { "p0r21436x8zb9dcf5h7kjnmqesgutwvy", "bc01fg45238967deuvhjyznpkmstqrwx" },
+    { "14365h7k9dcfesgujnmqp0r2twvyx8zb", "238967debc01fg45kmstqrwxuvhjyznp" }
+};
+
 STRLEN
 precision(STRLEN lat, STRLEN lon) {
     IV lab;
@@ -109,7 +116,95 @@ precision(STRLEN lat, STRLEN lon) {
     lob = (int) ( (lon * 3.32192809488736 + 1) + 9 );
     return (int) ( ( ( lab > lob ? lab : lob ) + 1 ) / 2.5 );
 }
-    
+
+enum GH_DIRECTION {
+    RIGHT = 0,
+    LEFT = 1,
+    TOP = 2,
+    BOTTOM = 3
+};
+
+/* need to free this return value! */
+char *
+adjacent(char *hash, STRLEN hashlen, enum GH_DIRECTION direction) {
+    char base[8192];
+    char last_ch = hash[ hashlen - 2 ];
+    char *pos, *ret;
+    IV type = hashlen % 2;
+    IV base_len;
+
+    if (hashlen < 2)
+        croak("PANIC: hash too short!");
+
+    memcpy(base, hash, hashlen - 2 );
+    base[hashlen - 1] = '\0';
+
+    pos = index(NEIGHBORS[direction][type], last_ch);
+    if (pos == NULL) {
+        char *tmp = adjacent(base, hashlen - 1, direction);
+        strcpy(base, tmp);
+        Safefree(tmp);
+    }
+
+    base_len = strlen(base);
+    Newxz( ret, base_len + 1, char );
+    strcpy( ret, base );
+    ret[ base_len ] = PIECES[ index(NEIGHBORS[direction][type], last_ch) - NEIGHBORS[direction][type] ];
+    return ret;
+}
+
+void
+neighbors(char *hash, STRLEN hashlen, int around, int offset, char ***neighbors, int *nsize) {
+    char *xhash;
+    STRLEN xhashlen = hashlen;
+    int i = 1;
+
+    Newxz( xhash, hashlen, char );
+    Copy( hash, xhash, hashlen, char );
+
+    while ( offset > 0 ) {
+        char *top = adjacent( xhash, xhashlen, TOP );
+        char *left = adjacent( top, strlen(top), LEFT );
+        Safefree(xhash);
+        Safefree(top);
+        xhash = left;
+        xhashlen = strlen(xhash);
+
+        offset--;
+        i++;
+    }
+
+    {
+    int n = 0;
+    *nsize = 0;
+    Newxz( *neighbors, around, char **);
+    while (around-- > 0) {
+        int j;
+        int m = 0;
+
+        /* going to insert this many neighbors */
+        Renew( neighbors[n], 8 * i - 1, char *);
+
+        neighbors[n][m++] = adjacent(xhash, xhashlen, TOP);
+        for ( j = 0; j < 2 * i - 1; j ++ ) {
+            neighbors[n][m++] = adjacent(xhash, xhashlen, RIGHT);
+        }
+        for ( j = 0; j < 2 * i; j ++ ) {
+            neighbors[n][m++] = adjacent(xhash, xhashlen, BOTTOM);
+        }
+        for ( j = 0; j < 2 * i; j ++ ) {
+            neighbors[n][m++] = adjacent(xhash, xhashlen, LEFT);
+        }
+        for ( j = 0; j < 2 * i; j ++ ) {
+            neighbors[n][m++] = adjacent(xhash, xhashlen, TOP);
+        }
+        i++;
+        n++;
+        *nsize += m;
+    }
+    }
+}
+
 MODULE = Geo::Hash::XS PACKAGE = Geo::Hash::XS
 
 PROTOTYPES: DISABLE
@@ -143,4 +238,35 @@ decode(self, hash)
         decode(hash, len, &lat, &lon);
         mXPUSHn(lat);
         mXPUSHn(lon);
+
+char *
+adjacent(self, hash, direction)
+        SV *self;
+        char *hash;
+        int direction;
+    CODE:
+        RETVAL = adjacent(hash, strlen(hash), direction);
+    OUTPUT:
+        RETVAL
+
+void
+neighbors(self, hash, around = 1, offset = 0)
+        SV *self;
+        char *hash;
+        int around;
+        int offset;
+    PREINIT:
+        int i;
+        int nsize;
+        char **list;
+    PPCODE:
+        neighbors(hash, strlen(hash), around, offset, &list, &nsize);
+
+        for( i = 0; i < nsize; i++ ) {
+            mXPUSHp( list[i], strlen(list[i]) );
+        }
+        for( i = 0; i < nsize; i++ ) {
+            Safefree(list[i]);
+        }
+        Safefree(list);
 
