@@ -177,7 +177,7 @@ neighbors(char *hash, STRLEN hashlen, int around, int offset, char ***neighbors,
     {
     int n = 0;
     *nsize = 0;
-    Newxz( *neighbors, around, char **);
+    Newxz( neighbors, around, char **);
     while (around-- > 0) {
         int j;
         int m = 0;
@@ -221,6 +221,7 @@ encode(self, lat, lon, p = 32)
             p = precision( SvLEN(lat), SvLEN(lon) );
         }
         */
+        PERL_UNUSED_VAR(self);
 
         Newxz(RETVAL, p + 1, char);
         encode(RETVAL, p, SvNV(lat), SvNV(lon));
@@ -235,6 +236,7 @@ decode(self, hash)
         NV lat = 0, lon = 0;
         STRLEN len = strlen(hash);
     PPCODE:
+        PERL_UNUSED_VAR(self);
         decode(hash, len, &lat, &lon);
         mXPUSHn(lat);
         mXPUSHn(lon);
@@ -245,6 +247,7 @@ adjacent(self, hash, direction)
         char *hash;
         int direction;
     CODE:
+        PERL_UNUSED_VAR(self);
         RETVAL = adjacent(hash, strlen(hash), direction);
     OUTPUT:
         RETVAL
@@ -260,6 +263,7 @@ neighbors(self, hash, around = 1, offset = 0)
         int nsize;
         char **list;
     PPCODE:
+        PERL_UNUSED_VAR(self);
         neighbors(hash, strlen(hash), around, offset, &list, &nsize);
 
         for( i = 0; i < nsize; i++ ) {
