@@ -24,8 +24,9 @@ Geo::Hash::XS - Geo::Hash in XS
 
 =head1 DESCRIPTION
 
-Geo::Hash::XS encodes and decodes geohash strings, fast. It does nothing
-else.
+Geo::Hash::XS encodes and decodes geohash strings, fast. 
+
+Currently this module is alpha quality (especially the C<adjacent()> and C<negihbors()> methods, which I just kind of copied the logic from elsewhere). Please submit tests and patches!
 
 =head1 METHODS
 
@@ -40,6 +41,10 @@ given. If not given, $precision is always 32
 =head2 ($lat, $lon) = $gh->decode( $hash )
 
 Decodes $hash to $lat and $lon
+
+=head2 adjacent
+
+=head2 neighbors
 
 =head2 PERFORMANCE
 
