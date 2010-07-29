@@ -44,7 +44,11 @@ Decodes $hash to $lat and $lon
 
 =head2 adjacent
 
+Please consider this method to be in completely unstable state. Tests and patches welcome.
+
 =head2 neighbors
+
+Please consider this method to be in completely unstable state. Tests and patches welcome.
 
 =head2 PERFORMANCE
 
