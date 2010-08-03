@@ -1,6 +1,9 @@
 Changes
 =======
 
+0.00005 - Aug 03 2010
+    * Make around/offset actually work for neighbors() (hiratara)
+
 0.00004 - Aug 03 2010
     * Fix overflow (mattn)
     * Add some author tests
