@@ -149,7 +149,7 @@ adjacent(char *hash, STRLEN hashlen, enum GH_DIRECTION direction) {
     memcpy(base, hash, hashlen - 1);
     *(base + hashlen - 1) = '\0';
 
-    pos = index(BORDERS[direction][type], last_ch);
+    pos = strchr(BORDERS[direction][type], last_ch);
     if (pos != NULL) {
         char *tmp = adjacent(base, strlen(base), direction);
         strcpy(base, tmp);
@@ -158,7 +158,7 @@ adjacent(char *hash, STRLEN hashlen, enum GH_DIRECTION direction) {
     base_len = strlen(base);
     Newxz( ret, base_len + 2, char );
     strcpy( ret, base );
-    ret[ base_len ] = PIECES[ index(NEIGHBORS[direction][type], last_ch) - NEIGHBORS[direction][type] ]; 
+    ret[ base_len ] = PIECES[ strchr(NEIGHBORS[direction][type], last_ch) - NEIGHBORS[direction][type] ]; 
     *(ret + base_len + 1) = '\0';
     return ret;
 }
