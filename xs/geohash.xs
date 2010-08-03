@@ -132,9 +132,10 @@ enum GH_DIRECTION {
 };
 
 /* need to free this return value! */
+#define HASHBASE_BUFSIZ 8192
 char *
 adjacent(char *hash, STRLEN hashlen, enum GH_DIRECTION direction) {
-    char base[8192];
+    char base[HASHBASE_BUFSIZ];
     char last_ch = hash[ hashlen - 1 ];
     char *pos, *ret;
     IV type = hashlen % 2;
@@ -142,9 +143,11 @@ adjacent(char *hash, STRLEN hashlen, enum GH_DIRECTION direction) {
 
     if (hashlen < 1)
         croak("PANIC: hash too short!");
+    if (hashlen > HASHBASE_BUFSIZ)
+        croak("PANIC: hash too big!");
 
-    memcpy(base, hash, hashlen - 1 );
-    base[hashlen] = '\0';
+    memcpy(base, hash, hashlen);
+    *(base + hashlen) = '\0';
 
     pos = index(BORDERS[direction][type], last_ch);
     if (pos != NULL) {
@@ -171,7 +174,7 @@ neighbors(char *hash, STRLEN hashlen, int around, int offset, char ***neighbors,
 
     while ( offset > 0 ) {
         char *top = adjacent( xhash, xhashlen, TOP );
-        char *left = adjacent( top, strlen(top), LEFT );
+        char *left = adjacent( top, strlen(top) + 1, LEFT );
         Safefree(xhash);
         Safefree(top);
         xhash = left;
