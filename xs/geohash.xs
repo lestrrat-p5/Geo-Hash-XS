@@ -167,7 +167,6 @@ void
 neighbors(char *hash, STRLEN hashlen, int around, int offset, char ***neighbors, int *nsize) {
     char *xhash;
     STRLEN xhashlen = hashlen;
-    int n = 0;
     int i = 1;
 
     Newxz( xhash, hashlen + 1, char );
@@ -176,7 +175,7 @@ neighbors(char *hash, STRLEN hashlen, int around, int offset, char ***neighbors,
 
     *nsize = ( (around + offset) * 2 + 1 ) * ( (around + offset) * 2 + 1 )
              - (offset * 2 + 1) * (offset * 2 + 1);
-    Newxz( neighbors[n], *nsize, char *);
+    Newxz( *neighbors, *nsize, char *);
 
     while ( offset > 0 ) {
         char *top = adjacent( xhash, xhashlen, TOP );
@@ -196,18 +195,18 @@ neighbors(char *hash, STRLEN hashlen, int around, int offset, char ***neighbors,
         int j;
 
         /* going to insert this many neighbors */
-        xhash = neighbors[n][m++] = adjacent(xhash, xhashlen, TOP);
+        xhash = (*neighbors)[m++] = adjacent(xhash, xhashlen, TOP);
         for ( j = 0; j < 2 * i - 1; j ++ ) {
-            xhash = neighbors[n][m++] = adjacent(xhash, xhashlen, RIGHT);
+            xhash = (*neighbors)[m++] = adjacent(xhash, xhashlen, RIGHT);
         }
         for ( j = 0; j < 2 * i; j ++ ) {
-            xhash = neighbors[n][m++] = adjacent(xhash, xhashlen, BOTTOM);
+            xhash = (*neighbors)[m++] = adjacent(xhash, xhashlen, BOTTOM);
         }
         for ( j = 0; j < 2 * i; j ++ ) {
-            xhash = neighbors[n][m++] = adjacent(xhash, xhashlen, LEFT);
+            xhash = (*neighbors)[m++] = adjacent(xhash, xhashlen, LEFT);
         }
         for ( j = 0; j < 2 * i; j ++ ) {
-            xhash = neighbors[n][m++] = adjacent(xhash, xhashlen, TOP);
+            xhash = (*neighbors)[m++] = adjacent(xhash, xhashlen, TOP);
         }
         i++;
     }
