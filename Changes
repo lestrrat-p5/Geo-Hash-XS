@@ -1,6 +1,10 @@
 Changes
 =======
 
+0.00004 - Aug 03 2010
+    * Fix overflow (mattn)
+    * Add some author tests
+
 0.00003 - Aug 03 2010
     * `index' is the BSD name for strchr (mattn)
       (Apparently this allows compilation on Windows. Coolness!)
