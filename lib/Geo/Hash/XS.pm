@@ -52,12 +52,16 @@ Please consider this method to be in completely unstable state. Tests and patche
 
 =head2 PERFORMANCE
 
+=over 4
+
 =item benchmark/encode.pl
 
     precision = 5...
               Rate  perl    xs
     perl   13713/s    --  -99%
     xs   1120208/s 8069%    --
+
+=back
 
 =head1 LICENSE
 
