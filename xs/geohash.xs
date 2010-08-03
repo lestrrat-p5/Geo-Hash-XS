@@ -146,20 +146,20 @@ adjacent(char *hash, STRLEN hashlen, enum GH_DIRECTION direction) {
     if (hashlen > HASHBASE_BUFSIZ)
         croak("PANIC: hash too big!");
 
-    memcpy(base, hash, hashlen);
-    *(base + hashlen) = '\0';
+    memcpy(base, hash, hashlen - 1);
+    *(base + hashlen - 1) = '\0';
 
     pos = index(BORDERS[direction][type], last_ch);
     if (pos != NULL) {
-        char *tmp = adjacent(base, hashlen - 1, direction);
+        char *tmp = adjacent(base, strlen(base), direction);
         strcpy(base, tmp);
         Safefree(tmp);
     }
-
     base_len = strlen(base);
-    Newxz( ret, base_len + 1, char );
+    Newxz( ret, base_len + 2, char );
     strcpy( ret, base );
-    ret[ base_len ] = PIECES[ index(NEIGHBORS[direction][type], last_ch) - NEIGHBORS[direction][type] ];
+    ret[ base_len ] = PIECES[ index(NEIGHBORS[direction][type], last_ch) - NEIGHBORS[direction][type] ]; 
+    *(ret + base_len + 1) = '\0';
     return ret;
 }
 
@@ -195,18 +195,18 @@ neighbors(char *hash, STRLEN hashlen, int around, int offset, char ***neighbors,
         /* going to insert this many neighbors */
         Renew( neighbors[n], 8 * i - 1, char *);
 
-        neighbors[n][m++] = adjacent(xhash, xhashlen, TOP);
+        xhash = neighbors[n][m++] = adjacent(xhash, xhashlen, TOP);
         for ( j = 0; j < 2 * i - 1; j ++ ) {
-            neighbors[n][m++] = adjacent(xhash, xhashlen, RIGHT);
+            xhash = neighbors[n][m++] = adjacent(xhash, xhashlen, RIGHT);
         }
         for ( j = 0; j < 2 * i; j ++ ) {
-            neighbors[n][m++] = adjacent(xhash, xhashlen, BOTTOM);
+            xhash = neighbors[n][m++] = adjacent(xhash, xhashlen, BOTTOM);
         }
         for ( j = 0; j < 2 * i; j ++ ) {
-            neighbors[n][m++] = adjacent(xhash, xhashlen, LEFT);
+            xhash = neighbors[n][m++] = adjacent(xhash, xhashlen, LEFT);
         }
         for ( j = 0; j < 2 * i; j ++ ) {
-            neighbors[n][m++] = adjacent(xhash, xhashlen, TOP);
+            xhash = neighbors[n][m++] = adjacent(xhash, xhashlen, TOP);
         }
         i++;
         n++;
