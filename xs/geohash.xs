@@ -170,15 +170,17 @@ neighbors(char *hash, STRLEN hashlen, int around, int offset, char ***neighbors,
     int n = 0;
     int i = 1;
 
-    Newxz( xhash, hashlen, char );
+    Newxz( xhash, hashlen + 1, char );
     Copy( hash, xhash, hashlen, char );
+    *(xhash + hashlen) = '\0';
+
     *nsize = ( (around + offset) * 2 + 1 ) * ( (around + offset) * 2 + 1 )
              - (offset * 2 + 1) * (offset * 2 + 1);
     Newxz( neighbors[n], *nsize, char *);
 
     while ( offset > 0 ) {
         char *top = adjacent( xhash, xhashlen, TOP );
-        char *left = adjacent( top, strlen(top) + 1, LEFT );
+        char *left = adjacent( top, strlen(top), LEFT );
         Safefree(xhash);
         Safefree(top);
         xhash = left;
