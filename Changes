@@ -1,6 +1,10 @@
 Changes
 =======
 
+0.00003 - Aug 03 2010
+    * `index' is the BSD name for strchr (mattn)
+      (Apparently this allows compilation on Windows. Coolness!)
+
 0.00002 - Aug 03 2010
     * Add tests for t/002_adjacent.t and t/003_neighbors.t (hiratara)
     * Fix adjacent accordingly (hiratara)
