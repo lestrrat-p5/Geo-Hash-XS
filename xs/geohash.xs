@@ -193,7 +193,7 @@ neighbors(char *hash, STRLEN hashlen, int around, int offset, char ***neighbors,
         int m = 0;
 
         /* going to insert this many neighbors */
-        Renew( neighbors[n], 8 * i - 1, char *);
+        Renew( neighbors[n], 8 * i, char *);
 
         xhash = neighbors[n][m++] = adjacent(xhash, xhashlen, TOP);
         for ( j = 0; j < 2 * i - 1; j ++ ) {
