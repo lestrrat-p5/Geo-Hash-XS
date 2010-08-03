@@ -167,10 +167,14 @@ void
 neighbors(char *hash, STRLEN hashlen, int around, int offset, char ***neighbors, int *nsize) {
     char *xhash;
     STRLEN xhashlen = hashlen;
+    int n = 0;
     int i = 1;
 
     Newxz( xhash, hashlen, char );
     Copy( hash, xhash, hashlen, char );
+    *nsize = ( (around + offset) * 2 + 1 ) * ( (around + offset) * 2 + 1 )
+             - (offset * 2 + 1) * (offset * 2 + 1);
+    Newxz( neighbors[n], *nsize, char *);
 
     while ( offset > 0 ) {
         char *top = adjacent( xhash, xhashlen, TOP );
@@ -185,16 +189,11 @@ neighbors(char *hash, STRLEN hashlen, int around, int offset, char ***neighbors,
     }
 
     {
-    int n = 0;
-    *nsize = 0;
-    Newxz( *neighbors, around, char *);
+    int m = 0;
     while (around-- > 0) {
         int j;
-        int m = 0;
 
         /* going to insert this many neighbors */
-        Renew( neighbors[n], 8 * i, char *);
-
         xhash = neighbors[n][m++] = adjacent(xhash, xhashlen, TOP);
         for ( j = 0; j < 2 * i - 1; j ++ ) {
             xhash = neighbors[n][m++] = adjacent(xhash, xhashlen, RIGHT);
@@ -209,8 +208,6 @@ neighbors(char *hash, STRLEN hashlen, int around, int offset, char ***neighbors,
             xhash = neighbors[n][m++] = adjacent(xhash, xhashlen, TOP);
         }
         i++;
-        n++;
-        *nsize += m;
     }
     }
 }
