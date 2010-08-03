@@ -2,7 +2,7 @@ package Geo::Hash::XS;
 use strict;
 use XSLoader;
 
-our $VERSION = '0.00001';
+our $VERSION = '0.00002';
 XSLoader::load __PACKAGE__, $VERSION;
 
 sub new { bless {}, shift }

@@ -1,5 +1,10 @@
 Changes
 =======
 
+0.00002 - Aug 03 2010
+    * Add tests for t/002_adjacent.t and t/003_neighbors.t (hiratara)
+    * Fix adjacent accordingly (hiratara)
+    * Fix neighbors
+
 0.00001 - Jul 29 2010
     * Initial release
