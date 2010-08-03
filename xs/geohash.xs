@@ -184,7 +184,7 @@ neighbors(char *hash, STRLEN hashlen, int around, int offset, char ***neighbors,
     {
     int n = 0;
     *nsize = 0;
-    Newxz( neighbors, around, char **);
+    Newxz( *neighbors, around, char *);
     while (around-- > 0) {
         int j;
         int m = 0;
