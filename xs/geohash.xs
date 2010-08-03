@@ -108,6 +108,13 @@ char* NEIGHBORS[4][2] = {
     { "14365h7k9dcfesgujnmqp0r2twvyx8zb", "238967debc01fg45kmstqrwxuvhjyznp" }
 };
 
+char* BORDERS[4][2] = {
+    { "bcfguvyz", "prxz" },
+    { "0145hjnp", "028b" },
+    { "prxz", "bcfguvyz" },
+    { "028b", "0145hjnp" }
+};
+
 STRLEN
 precision(STRLEN lat, STRLEN lon) {
     IV lab;
@@ -128,19 +135,19 @@ enum GH_DIRECTION {
 char *
 adjacent(char *hash, STRLEN hashlen, enum GH_DIRECTION direction) {
     char base[8192];
-    char last_ch = hash[ hashlen - 2 ];
+    char last_ch = hash[ hashlen - 1 ];
     char *pos, *ret;
     IV type = hashlen % 2;
     IV base_len;
 
-    if (hashlen < 2)
+    if (hashlen < 1)
         croak("PANIC: hash too short!");
 
-    memcpy(base, hash, hashlen - 2 );
-    base[hashlen - 1] = '\0';
+    memcpy(base, hash, hashlen - 1 );
+    base[hashlen] = '\0';
 
-    pos = index(NEIGHBORS[direction][type], last_ch);
-    if (pos == NULL) {
+    pos = index(BORDERS[direction][type], last_ch);
+    if (pos != NULL) {
         char *tmp = adjacent(base, hashlen - 1, direction);
         strcpy(base, tmp);
         Safefree(tmp);
