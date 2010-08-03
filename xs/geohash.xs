@@ -169,12 +169,17 @@ neighbors(char *hash, STRLEN hashlen, int around, int offset, char ***neighbors,
     STRLEN xhashlen = hashlen;
     int i = 1;
 
-    Newxz( xhash, hashlen, char );
+    Newxz( xhash, hashlen + 1, char );
     Copy( hash, xhash, hashlen, char );
+    *(xhash + hashlen) = '\0';
+
+    *nsize = ( (around + offset) * 2 + 1 ) * ( (around + offset) * 2 + 1 )
+             - (offset * 2 + 1) * (offset * 2 + 1);
+    Newxz( *neighbors, *nsize, char *);
 
     while ( offset > 0 ) {
         char *top = adjacent( xhash, xhashlen, TOP );
-        char *left = adjacent( top, strlen(top) + 1, LEFT );
+        char *left = adjacent( top, strlen(top), LEFT );
         Safefree(xhash);
         Safefree(top);
         xhash = left;
@@ -185,32 +190,25 @@ neighbors(char *hash, STRLEN hashlen, int around, int offset, char ***neighbors,
     }
 
     {
-    int n = 0;
-    *nsize = 0;
-    Newxz( *neighbors, around, char *);
+    int m = 0;
     while (around-- > 0) {
         int j;
-        int m = 0;
 
         /* going to insert this many neighbors */
-        Renew( neighbors[n], 8 * i, char *);
-
-        xhash = neighbors[n][m++] = adjacent(xhash, xhashlen, TOP);
+        xhash = (*neighbors)[m++] = adjacent(xhash, xhashlen, TOP);
         for ( j = 0; j < 2 * i - 1; j ++ ) {
-            xhash = neighbors[n][m++] = adjacent(xhash, xhashlen, RIGHT);
+            xhash = (*neighbors)[m++] = adjacent(xhash, xhashlen, RIGHT);
         }
         for ( j = 0; j < 2 * i; j ++ ) {
-            xhash = neighbors[n][m++] = adjacent(xhash, xhashlen, BOTTOM);
+            xhash = (*neighbors)[m++] = adjacent(xhash, xhashlen, BOTTOM);
         }
         for ( j = 0; j < 2 * i; j ++ ) {
-            xhash = neighbors[n][m++] = adjacent(xhash, xhashlen, LEFT);
+            xhash = (*neighbors)[m++] = adjacent(xhash, xhashlen, LEFT);
         }
         for ( j = 0; j < 2 * i; j ++ ) {
-            xhash = neighbors[n][m++] = adjacent(xhash, xhashlen, TOP);
+            xhash = (*neighbors)[m++] = adjacent(xhash, xhashlen, TOP);
         }
         i++;
-        n++;
-        *nsize += m;
     }
     }
 }
