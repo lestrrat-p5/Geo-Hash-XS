@@ -147,10 +147,10 @@ precision(SV *lat, SV *lon) {
 }
 
 enum GH_DIRECTION {
-    RIGHT = 0,
-    LEFT = 1,
-    TOP = 2,
-    BOTTOM = 3
+    ADJ_RIGHT = 0,
+    ADJ_LEFT = 1,
+    ADJ_TOP = 2,
+    ADJ_BOTTOM = 3
 };
 
 /* need to free this return value! */
@@ -200,8 +200,8 @@ neighbors(char *hash, STRLEN hashlen, int around, int offset, char ***neighbors,
     Newxz( *neighbors, *nsize, char *);
 
     while ( offset > 0 ) {
-        char *top = adjacent( xhash, xhashlen, TOP );
-        char *left = adjacent( top, strlen(top), LEFT );
+        char *top = adjacent( xhash, xhashlen, ADJ_TOP );
+        char *left = adjacent( top, strlen(top), ADJ_LEFT );
         Safefree(xhash);
         Safefree(top);
         xhash = left;
@@ -217,18 +217,18 @@ neighbors(char *hash, STRLEN hashlen, int around, int offset, char ***neighbors,
         int j;
 
         /* going to insert this many neighbors */
-        xhash = (*neighbors)[m++] = adjacent(xhash, xhashlen, TOP);
+        xhash = (*neighbors)[m++] = adjacent(xhash, xhashlen, ADJ_TOP);
         for ( j = 0; j < 2 * i - 1; j ++ ) {
-            xhash = (*neighbors)[m++] = adjacent(xhash, xhashlen, RIGHT);
+            xhash = (*neighbors)[m++] = adjacent(xhash, xhashlen, ADJ_RIGHT);
         }
         for ( j = 0; j < 2 * i; j ++ ) {
-            xhash = (*neighbors)[m++] = adjacent(xhash, xhashlen, BOTTOM);
+            xhash = (*neighbors)[m++] = adjacent(xhash, xhashlen, ADJ_BOTTOM);
         }
         for ( j = 0; j < 2 * i; j ++ ) {
-            xhash = (*neighbors)[m++] = adjacent(xhash, xhashlen, LEFT);
+            xhash = (*neighbors)[m++] = adjacent(xhash, xhashlen, ADJ_LEFT);
         }
         for ( j = 0; j < 2 * i; j ++ ) {
-            xhash = (*neighbors)[m++] = adjacent(xhash, xhashlen, TOP);
+            xhash = (*neighbors)[m++] = adjacent(xhash, xhashlen, ADJ_TOP);
         }
         i++;
     }
@@ -333,4 +333,16 @@ neighbors(self, hash, around = 1, offset = 0)
             Safefree(list[i]);
         }
         Safefree(list);
+
+IV
+_constant()
+    ALIAS:
+        ADJ_TOP = ADJ_TOP
+        ADJ_RIGHT = ADJ_RIGHT
+        ADJ_LEFT = ADJ_LEFT
+        ADJ_BOTTOM = ADJ_BOTTOM
+    CODE:
+        RETVAL = ix;
+    OUTPUT:
+        RETVAL
 

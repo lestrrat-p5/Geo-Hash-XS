@@ -1,6 +1,9 @@
 package Geo::Hash::XS;
 use strict;
 use XSLoader;
+use Exporter 'import';
+our @EXPORT_OK = qw( ADJ_TOP ADJ_RIGHT ADJ_LEFT ADJ_BOTTOM );
+our %EXPORT_TAGS = (adjacent => \@EXPORT_OK);
 
 our $VERSION = '0.00005';
 XSLoader::load __PACKAGE__, $VERSION;
@@ -34,27 +37,46 @@ Currently this module is alpha quality (especially the C<adjacent()> and C<negih
 
 =head2 $hash = $gh->encode($lat, $lon[, $precision])
 
-One notable difference between Geo::Hash::XS and Geo::Hash is that
-encode() does NOT dynamically adjust the precision when $precision is not
-given. If not given, $precision is always 32
+Encodes the given C<$lat> and C<$lon> to a geohash. If C<$precision> is not
+given, automatically adjusts the precision according the the given C<$lat>
+and C<$lon> values.
 
-=head2 ($lat_range, $lon_range) = $gh->decode_to_interval( $hash )
-
-Like C<decode()> but C<decode_to_interval()> decodes $hash to $lat_range and $lon_range. Each range is a reference to two element arrays which contains the upper and lower bounds.
+If you do not want Geo::Hash::XS to spend time calculating this, explicitly
+specify C<$precision>.
 
 =head2 ($lat, $lon) = $gh->decode( $hash )
 
 Decodes $hash to $lat and $lon
 
-=head2 adjacent
+=head2 ($lat_range, $lon_range) = $gh->decode_to_interval( $hash )
 
-Please consider this method to be in completely unstable state. Tests and patches welcome.
+Like C<decode()> but C<decode_to_interval()> decodes $hash to $lat_range and $lon_range. Each range is a reference to two element arrays which contains the upper and lower bounds.
 
-=head2 neighbors
+=head2 $adjacent_hash = $gh->adjacent($hash, $where)
 
-Please consider this method to be in completely unstable state. Tests and patches welcome.
+Returns the adjacent geohash. C<$where> denotes the direction, so if you
+want the block to the right of C<$hash>, you say:
 
-=head2 PERFORMANCE
+    use Geo::Hash::XS qw(ADJ_RIGHT);
+
+    my $gh = Geo::Hash::XS->new();
+    my $adjacent = $gh->adjacent( $hash, ADJ_RIGHT );
+
+=head2 neighbors($hash, $around, $offset)
+
+Returns the list of neighbors (the blocks surrounding $hash)
+
+=head2 $precision = $gh->precision($lat, $lon)
+
+Returns the apparent required precision to describe the given latitude and longitude.
+
+=head1 CONSTANTS
+
+=head2 ADJ_LEFT, ADJ_RIGHT, ADJ_TOP, ADJ_BOTTOM
+
+Used to specify the direction in C<adjacent()>
+
+=head1 PERFORMANCE
 
 =over 4
 
