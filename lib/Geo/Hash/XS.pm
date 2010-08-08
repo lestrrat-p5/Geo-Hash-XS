@@ -111,8 +111,6 @@ Here's the output from running benchmark/encode.pl:
 Obviously, the benefit of doing this calculation in XS becomes larger with
 higher precision, but generaly you don't need precision > 10.
 
-=back
-
 =head1 LICENSE
 
 This program is free software; you can redistribute it and/or modify it
