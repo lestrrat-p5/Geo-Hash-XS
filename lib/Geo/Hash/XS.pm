@@ -81,7 +81,7 @@ Used to specify the direction in C<adjacent()>
 Here's the output from running benchmark/encode.pl:
 
     Geo::Hash: 0.02
-    Geo::Hash::XS: 0.00005
+    Geo::Hash::XS: 0.00006
     
     precision = auto...
               Rate   perl     xs
@@ -110,15 +110,6 @@ Here's the output from running benchmark/encode.pl:
 
 Obviously, the benefit of doing this calculation in XS becomes larger with
 higher precision, but generaly you don't need precision > 10.
-
-=over 4
-
-=item benchmark/encode.pl
-
-    precision = 5...
-              Rate  perl    xs
-    perl   13713/s    --  -99%
-    xs   1120208/s 8069%    --
 
 =back
 
