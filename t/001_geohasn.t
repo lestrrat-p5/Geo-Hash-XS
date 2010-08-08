@@ -55,8 +55,7 @@ for my $test ( @tests ) {
           for 0 .. 1;
     }
 
-    TODO: {
-        todo_skip "auto-precision is not implemented", 3;
+    {
         my $enc_hash = $gh->encode( @$pos );
         ok abs( length( $enc_hash ) - length( $hash ) ) <= 1,
           "$hash: auto precision";

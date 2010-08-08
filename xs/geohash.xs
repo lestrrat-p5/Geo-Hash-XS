@@ -125,13 +125,25 @@ char* BORDERS[4][2] = {
     { "028b", "0145hjnp" }
 };
 
+static IV
+bits_for_number(char *number) {
+    for(; *number != '\0'; number++){
+        if(*number == '.'){
+            number++; /* skip dot */
+            /* 3.32192809488736 = log_2(10) */
+            return (IV) (strlen(number)) * 3.32192809488736 + 1;
+        }
+    }
+    return 0;
+}
+
 STRLEN
-precision(STRLEN lat, STRLEN lon) {
-    IV lab;
-    IV lob;
-    lab = (int) ( (lat * 3.32192809488736 + 1) + 8 );
-    lob = (int) ( (lon * 3.32192809488736 + 1) + 9 );
-    return (int) ( ( ( lab > lob ? lab : lob ) + 1 ) / 2.5 );
+precision(SV *lat, SV *lon) {
+    IV lab = bits_for_number(SvPV_nolen(lat)) + 8;  /* 8 > log_2(180) */
+    IV lob = bits_for_number(SvPV_nolen(lon)) + 9;  /* 9 > log_2(360) */
+
+    /* Though it seems I should use ceil(), I copied the logic from Geo::Hash */
+    return (STRLEN) ( ( ( lab > lob ? lab : lob ) + 1 ) / 2.5 );
 }
 
 enum GH_DIRECTION {
@@ -228,17 +240,15 @@ MODULE = Geo::Hash::XS PACKAGE = Geo::Hash::XS
 PROTOTYPES: DISABLE
 
 char *
-encode(self, lat, lon, p = 32)
+encode(self, lat, lon, p = 0)
         SV *self;
         SV *lat;
         SV *lon;
         IV p;
     CODE:
-        /*
         if (p <= 0) {
-            p = precision( SvLEN(lat), SvLEN(lon) );
+            p = precision(lat, lon);
         }
-        */
         PERL_UNUSED_VAR(self);
 
         Newxz(RETVAL, p + 1, char);
@@ -279,6 +289,17 @@ decode(self, hash)
         decode(hash, len, &lat, &lon);
         mXPUSHn(lat);
         mXPUSHn(lon);
+
+STRLEN
+precision(self, lat, lon)
+        SV *self
+        SV *lat
+        SV *lon;
+    CODE:
+        PERL_UNUSED_VAR(self);
+        RETVAL = precision(lat, lon);
+    OUTPUT:
+        RETVAL
 
 char *
 adjacent(self, hash, direction)
