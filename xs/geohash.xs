@@ -48,7 +48,7 @@ encode(char *buf, STRLEN precision, NV lat, NV lon) {
 }
 
 void
-decode(char *hash, STRLEN len, NV *lat, NV *lon) {
+decode_to_interval(char *hash, STRLEN len, NV *lat_min_out, NV *lat_max_out, NV *lon_min_out, NV *lon_max_out) {
     STRLEN i, j;
     IV which = 0, min_or_max;
     NV 
@@ -97,6 +97,16 @@ decode(char *hash, STRLEN len, NV *lat, NV *lon) {
         }
     }
 
+    *lat_min_out = lat_min;
+    *lat_max_out = lat_max;
+    *lon_min_out = lon_min;
+    *lon_max_out = lon_max;
+}
+
+void
+decode(char *hash, STRLEN len, NV *lat, NV *lon) {
+    NV lat_min = 0, lat_max = 0, lon_min = 0, lon_max = 0;
+    decode_to_interval(hash, len, &lat_min, &lat_max, &lon_min, &lon_max);
     *lat = (lat_max + lat_min) / 2;
     *lon = (lon_max + lon_min) / 2;
 }
@@ -235,6 +245,27 @@ encode(self, lat, lon, p = 32)
         encode(RETVAL, p, SvNV(lat), SvNV(lon));
     OUTPUT:
         RETVAL
+
+void
+decode_to_interval(self, hash)
+        SV *self;
+        char *hash;
+    INIT:
+        NV lat_min = 0, lat_max = 0, lon_min = 0, lon_max = 0;
+        STRLEN len = strlen(hash);
+        AV *lat_range = (AV *)sv_2mortal((SV *)newAV());
+        AV *lon_range = (AV *)sv_2mortal((SV *)newAV());
+    PPCODE:
+        PERL_UNUSED_VAR(self);
+        decode_to_interval(hash, len, &lat_min, &lat_max, &lon_min, &lon_max);
+
+        av_push(lat_range, newSVnv(lat_min));
+        av_push(lat_range, newSVnv(lat_max));
+        av_push(lon_range, newSVnv(lon_min));
+        av_push(lon_range, newSVnv(lon_max));
+
+        XPUSHs(sv_2mortal(newRV_inc((SV *)lat_range)));
+        XPUSHs(sv_2mortal(newRV_inc((SV *)lon_range)));
 
 void
 decode(self, hash)

@@ -38,6 +38,10 @@ One notable difference between Geo::Hash::XS and Geo::Hash is that
 encode() does NOT dynamically adjust the precision when $precision is not
 given. If not given, $precision is always 32
 
+=head2 ($lat_range, $lon_range) = $gh->decode_to_interval( $hash )
+
+Like C<decode()> but C<decode_to_interval()> decodes $hash to $lat_range and $lon_range. Each range is a reference to two element arrays which contains the upper and lower bounds.
+
 =head2 ($lat, $lon) = $gh->decode( $hash )
 
 Decodes $hash to $lat and $lon
