@@ -1,6 +1,13 @@
 Changes
 =======
 
+0.00006 - Aug 09 2010
+    * Implement precision() (hiratara)
+    * Implement decode_to_precision() (hiratara)
+    * Fix documentation
+    * Add constants to specify direction for adjacent()
+    * Run tests from Geo::Hash 
+
 0.00005 - Aug 03 2010
     * Make around/offset actually work for neighbors() (hiratara)
 
