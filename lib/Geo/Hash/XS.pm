@@ -78,6 +78,39 @@ Used to specify the direction in C<adjacent()>
 
 =head1 PERFORMANCE
 
+Here's the output from running benchmark/encode.pl:
+
+    Geo::Hash: 0.02
+    Geo::Hash::XS: 0.00005
+    
+    precision = auto...
+              Rate   perl     xs
+    perl   19638/s     --   -99%
+    xs   2639682/s 13341%     --
+    
+    precision = 5...
+              Rate   perl     xs
+    perl   17600/s     --   -99%
+    xs   2479507/s 13988%     --
+    
+    precision = 10...
+              Rate   perl     xs
+    perl    9286/s     --  -100%
+    xs   2039615/s 21864%     --
+    
+    precision = 20...
+              Rate   perl     xs
+    perl    4884/s     --  -100%
+    xs   1622943/s 33132%     --
+    
+    precision = 30...
+              Rate   perl     xs
+    perl    3254/s     --  -100%
+    xs   1257127/s 38532%     --
+
+Obviously, the benefit of doing this calculation in XS becomes larger with
+higher precision, but generaly you don't need precision > 10.
+
 =over 4
 
 =item benchmark/encode.pl
