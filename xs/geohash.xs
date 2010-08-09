@@ -126,12 +126,16 @@ char* BORDERS[4][2] = {
     { "028b", "0145hjnp" }
 };
 
+#define LOG2_OF_10 3.32192809488736
+#define LOG2_OF_180 7.49185309632967
+#define LOG2_OF_360 8.49185309632968
+
 static IV
 bits_for_number(char *number) {
     for(; *number != '\0'; number++){
         if(*number == '.'){
             number++; /* skip dot */
-            return (IV) (strlen(number)) * log2(10) + 1;
+            return (IV) (strlen(number)) * LOG2_OF_10 + 1;
         }
     }
     return 0;
