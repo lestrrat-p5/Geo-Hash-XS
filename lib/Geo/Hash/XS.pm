@@ -62,7 +62,7 @@ want the block to the right of C<$hash>, you say:
     my $gh = Geo::Hash::XS->new();
     my $adjacent = $gh->adjacent( $hash, ADJ_RIGHT );
 
-=head2 neighbors($hash, $around, $offset)
+=head2 @list_of_geohashes = $gh->neighbors($hash, $around, $offset)
 
 Returns the list of neighbors (the blocks surrounding $hash)
 
