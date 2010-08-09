@@ -1,6 +1,7 @@
 #include "EXTERN.h"
 #include "perl.h"
 #include "XSUB.h"
+#include <math.h>
 
 char PIECES[32] = {
     '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
@@ -130,8 +131,7 @@ bits_for_number(char *number) {
     for(; *number != '\0'; number++){
         if(*number == '.'){
             number++; /* skip dot */
-            /* 3.32192809488736 = log_2(10) */
-            return (IV) (strlen(number)) * 3.32192809488736 + 1;
+            return (IV) (strlen(number)) * log2(10) + 1;
         }
     }
     return 0;
