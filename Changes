@@ -1,6 +1,10 @@
 Changes
 =======
 
+0.00007 - Aug 11 2010
+    * Update Test::More dependency
+    * No code changes
+
 0.00006 - Aug 09 2010
     * Implement precision() (hiratara)
     * Implement decode_to_precision() (hiratara)
