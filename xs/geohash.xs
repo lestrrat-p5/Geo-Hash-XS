@@ -305,14 +305,20 @@ precision(self, lat, lon)
     OUTPUT:
         RETVAL
 
-char *
+SV *
 adjacent(self, hash, direction)
         SV *self;
         char *hash;
         int direction;
+    INIT:
+        char *adj;
     CODE:
         PERL_UNUSED_VAR(self);
-        RETVAL = adjacent(hash, strlen(hash), direction);
+        adj = adjacent(hash, strlen(hash), direction);
+
+        RETVAL = newSV(0);
+        sv_setpv(RETVAL, adj);
+        Safefree(adj);
     OUTPUT:
         RETVAL
 
