@@ -243,20 +243,26 @@ MODULE = Geo::Hash::XS PACKAGE = Geo::Hash::XS
 
 PROTOTYPES: DISABLE
 
-char *
+SV *
 encode(self, lat, lon, p = 0)
         SV *self;
         SV *lat;
         SV *lon;
         IV p;
+    INIT:
+        char *encoded;
     CODE:
         if (p <= 0) {
             p = precision(lat, lon);
         }
         PERL_UNUSED_VAR(self);
 
-        Newxz(RETVAL, p + 1, char);
-        encode(RETVAL, p, SvNV(lat), SvNV(lon));
+        Newxz(encoded, p + 1, char);
+        encode(encoded, p, SvNV(lat), SvNV(lon));
+
+        RETVAL = newSV(0);
+        sv_setpv( RETVAL, encoded );
+        Safefree( encoded );
     OUTPUT:
         RETVAL
 
