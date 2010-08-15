@@ -175,11 +175,13 @@ adjacent(char *hash, STRLEN hashlen, enum GH_DIRECTION direction) {
     memcpy(base, hash, hashlen - 1);
     *(base + hashlen - 1) = '\0';
 
-    pos = strchr(BORDERS[direction][type], last_ch);
-    if (pos != NULL) {
-        char *tmp = adjacent(base, strlen(base), direction);
-        strcpy(base, tmp);
-        Safefree(tmp);
+    if (hashlen > 1) {
+        pos = strchr(BORDERS[direction][type], last_ch);
+        if (pos != NULL) {
+           char *tmp = adjacent(base, strlen(base), direction);
+           strcpy(base, tmp);
+           Safefree(tmp);
+        }
     }
     base_len = strlen(base);
     Newxz( ret, base_len + 2, char );
