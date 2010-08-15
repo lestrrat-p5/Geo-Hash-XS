@@ -251,7 +251,7 @@ encode(self, lat, lon, p = 0)
         SV *lat;
         SV *lon;
         IV p;
-    INIT:
+    PREINIT:
         char *encoded;
     CODE:
         if (p <= 0) {
@@ -272,7 +272,7 @@ void
 decode_to_interval(self, hash)
         SV *self;
         char *hash;
-    INIT:
+    PREINIT:
         NV lat_min = 0, lat_max = 0, lon_min = 0, lon_max = 0;
         STRLEN len = strlen(hash);
         AV *lat_range = (AV *)sv_2mortal((SV *)newAV());
@@ -293,7 +293,7 @@ void
 decode(self, hash)
         SV *self;
         char *hash;
-    INIT:
+    PREINIT:
         NV lat = 0, lon = 0;
         STRLEN len = strlen(hash);
     PPCODE:
@@ -318,7 +318,7 @@ adjacent(self, hash, direction)
         SV *self;
         char *hash;
         int direction;
-    INIT:
+    PREINIT:
         char *adj;
     CODE:
         PERL_UNUSED_VAR(self);
