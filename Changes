@@ -1,6 +1,17 @@
 Changes
 =======
 
+0.00009 - Aug 16 2010
+    * !!!BACKWARD INCOMPATIBLE CHANGE!!!
+        -> decode_to_interval used to return
+            [ [ $lat_min, $lat_max ], [ $lon_min, $lon_max ] ]
+           but original Geo::Hash returns 
+            [ [ $lat_max, $lat_min ], [ $lon_max, $lon_min ] ]
+           so the return value was changed to return the same thing
+           as Geo::Hash
+    * Changed t/900_compat tests so that the test files are generated
+      when Makefile.PL runs
+
 0.00008 - Aug 16 2010
     * Fix many memory leaks. Valgrind rocks
     * Fix adjacent to work with edge case of 180 and -180 degrees (hiratara)

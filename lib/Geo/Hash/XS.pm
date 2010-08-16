@@ -5,7 +5,7 @@ use Exporter 'import';
 our @EXPORT_OK = qw( ADJ_TOP ADJ_RIGHT ADJ_LEFT ADJ_BOTTOM );
 our %EXPORT_TAGS = (adjacent => \@EXPORT_OK);
 
-our $VERSION = '0.00008';
+our $VERSION = '0.00009';
 XSLoader::load __PACKAGE__, $VERSION;
 
 sub new { bless {}, shift }
