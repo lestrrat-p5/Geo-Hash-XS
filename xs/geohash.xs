@@ -293,10 +293,10 @@ decode_to_interval(self, hash)
         PERL_UNUSED_VAR(self);
         decode_to_interval(hash, len, &lat_min, &lat_max, &lon_min, &lon_max);
 
-        av_push(lat_range, newSVnv(lat_min));
         av_push(lat_range, newSVnv(lat_max));
-        av_push(lon_range, newSVnv(lon_min));
+        av_push(lat_range, newSVnv(lat_min));
         av_push(lon_range, newSVnv(lon_max));
+        av_push(lon_range, newSVnv(lon_min));
 
         XPUSHs(sv_2mortal(newRV_inc((SV *)lat_range)));
         XPUSHs(sv_2mortal(newRV_inc((SV *)lon_range)));
