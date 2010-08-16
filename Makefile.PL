@@ -23,7 +23,7 @@ sub generate_compat_tests {
     );
     
     my $from_dir = 't';
-    my $to_dir   = File::Spec->catdir('t', '900_compat');
+    my $to_dir   = File::Spec->catdir('xt', 'compat');
     
     if (! -d $to_dir) {
         mkdir $to_dir or die "Could not make $to_dir";
