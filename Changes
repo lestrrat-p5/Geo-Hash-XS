@@ -1,6 +1,11 @@
 Changes
 =======
 
+0.00010 - Aug 16 2010
+    * Stupid me forgot that compat tests would require Geo::Hash.
+      These tests are now moved to author tests, so users don't have to
+      worry about them
+
 0.00009 - Aug 16 2010
     * !!!BACKWARD INCOMPATIBLE CHANGE!!!
         -> decode_to_interval used to return
