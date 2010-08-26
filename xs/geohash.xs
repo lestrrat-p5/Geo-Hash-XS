@@ -1,6 +1,8 @@
 #include "EXTERN.h"
 #include "perl.h"
 #include "XSUB.h"
+#define NEED_sv_2pv_flags_GLOBAL
+#include "ppport.h"
 #include <math.h>
 
 char PIECES[32] = {
@@ -105,7 +107,7 @@ decode_to_interval(char *hash, STRLEN len, NV *lat_min_out, NV *lat_max_out, NV 
 }
 
 void
-decode(char *hash, STRLEN len, NV *lat, NV *lon) {
+decode(char *hash, IV len, NV *lat, NV *lon) {
     NV lat_min = 0, lat_max = 0, lon_min = 0, lon_max = 0;
     decode_to_interval(hash, len, &lat_min, &lat_max, &lon_min, &lon_max);
     *lat = (lat_max + lat_min) / 2;
@@ -141,13 +143,13 @@ bits_for_number(char *number) {
     return 0;
 }
 
-STRLEN
+static IV
 precision(SV *lat, SV *lon) {
     IV lab = bits_for_number(SvPV_nolen(lat)) + 8;  /* 8 > log_2(180) */
     IV lob = bits_for_number(SvPV_nolen(lon)) + 9;  /* 9 > log_2(360) */
 
     /* Though it seems I should use ceil(), I copied the logic from Geo::Hash */
-    return (STRLEN) ( ( ( lab > lob ? lab : lob ) + 1 ) / 2.5 );
+    return (IV) ( ( ( lab > lob ? lab : lob ) + 1 ) / 2.5 );
 }
 
 enum GH_DIRECTION {
@@ -159,7 +161,7 @@ enum GH_DIRECTION {
 
 /* need to free this return value! */
 #define HASHBASE_BUFSIZ 8192
-char *
+static char *
 adjacent(char *hash, STRLEN hashlen, enum GH_DIRECTION direction) {
     char base[HASHBASE_BUFSIZ];
     char last_ch = hash[ hashlen - 1 ];
@@ -191,7 +193,7 @@ adjacent(char *hash, STRLEN hashlen, enum GH_DIRECTION direction) {
     return ret;
 }
 
-void
+static void
 neighbors(char *hash, STRLEN hashlen, int around, int offset, char ***neighbors, int *nsize) {
     char *xhash;
     STRLEN xhashlen = hashlen;
@@ -314,7 +316,7 @@ decode(self, hash)
         mXPUSHn(lat);
         mXPUSHn(lon);
 
-STRLEN
+IV
 precision(self, lat, lon)
         SV *self
         SV *lat
