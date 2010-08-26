@@ -5,13 +5,13 @@
 #include "ppport.h"
 #include <math.h>
 
-char PIECES[32] = {
+static char PIECES[32] = {
     '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
     'b', 'c', 'd', 'e', 'f', 'g', 'h', 'j', 'k', 'm',
     'n', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
 };
 
-void
+static void
 encode(char *buf, STRLEN precision, NV lat, NV lon) {
     IV which = 0;
     STRLEN count = 0;
@@ -50,7 +50,7 @@ encode(char *buf, STRLEN precision, NV lat, NV lon) {
     buf[count] = '\0';
 }
 
-void
+static void
 decode_to_interval(char *hash, STRLEN len, NV *lat_min_out, NV *lat_max_out, NV *lon_min_out, NV *lon_max_out) {
     STRLEN i, j;
     IV which = 0, min_or_max;
@@ -114,14 +114,14 @@ decode(char *hash, IV len, NV *lat, NV *lon) {
     *lon = (lon_max + lon_min) / 2;
 }
 
-char* NEIGHBORS[4][2] = {
+static char* NEIGHBORS[4][2] = {
     { "bc01fg45238967deuvhjyznpkmstqrwx", "p0r21436x8zb9dcf5h7kjnmqesgutwvy" },
     { "238967debc01fg45kmstqrwxuvhjyznp", "14365h7k9dcfesgujnmqp0r2twvyx8zb" },
     { "p0r21436x8zb9dcf5h7kjnmqesgutwvy", "bc01fg45238967deuvhjyznpkmstqrwx" },
     { "14365h7k9dcfesgujnmqp0r2twvyx8zb", "238967debc01fg45kmstqrwxuvhjyznp" }
 };
 
-char* BORDERS[4][2] = {
+static char* BORDERS[4][2] = {
     { "bcfguvyz", "prxz" },
     { "0145hjnp", "028b" },
     { "prxz", "bcfguvyz" },
