@@ -1,6 +1,11 @@
 Changes
 =======
 
+0.00012 - Sep 13 2010
+    * Make sure to check that values passed to encode() are in degrees,
+      not dotted dms values.
+    * Add tests for it.
+
 0.00011 - Aug 26 2010
     * Minor C level tweaks
     * Actually include ppport.h
