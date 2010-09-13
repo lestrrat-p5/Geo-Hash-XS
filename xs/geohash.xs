@@ -268,6 +268,10 @@ encode(self, lat, lon, p = 0)
     PREINIT:
         char *encoded;
     CODE:
+        if (! looks_like_number(lat) || ! looks_like_number(lon) ) {
+            croak("encode() only works on degrees, not dms values");
+        }  
+
         if (p <= 0) {
             p = precision(lat, lon);
         }

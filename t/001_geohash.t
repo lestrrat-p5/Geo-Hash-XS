@@ -41,12 +41,11 @@ my @tests = (
     },
 );
 
-# plan tests => 8 * @tests;
+ok my $gh = Geo::Hash::XS->new, "created new Geo::Hash::XS object";
+isa_ok $gh, 'Geo::Hash::XS';
 
 for my $test ( @tests ) {
     my ( $hash, $pos, $eps ) = @{$test}{qw(hash pos eps)};
-    ok my $gh = Geo::Hash::XS->new, "$hash: new";
-    isa_ok $gh, 'Geo::Hash::XS';
     is $gh->encode( @$pos, length $hash ), $hash, "$hash: encode";
 
     {
@@ -64,6 +63,26 @@ for my $test ( @tests ) {
         ok abs( $got[$_] - $pos->[$_] ) < $eps, "$hash: decode $_"
           for 0 .. 1;
     }
+}
+
+my @bad_cases = (
+    {
+        pos => [ '35.21.03.342', '138.34.45.725' ],
+    },
+    {
+        pos => [ '112', '138.34.45.725' ],
+    },
+    {
+        pos => [ '35.21.03.342', '95' ],
+    }
+);
+for my $test ( @bad_cases ) {
+    my ( $pos ) = @{$test}{qw( pos )};
+    eval {
+        $gh->encode( @$pos );
+    };
+    like $@, qr/encode\(\) only works on degrees, not dms values/,
+        "@$pos is not encodable and dies with an error";
 }
 
 done_testing;
