@@ -1,6 +1,12 @@
 Changes
 =======
 
+0.00013 - Sep 21 2010
+    * No code change. Just making CPAN Testers Happy.
+    * Fix xt/compat.t to actually run (tokuhirom)
+    * Add .gitignore in repo (tokuhirom)
+    * Add explicit Perl minimum version (tokuhirom)
+
 0.00012 - Sep 13 2010
     * Make sure to check that values passed to encode() are in degrees,
       not dotted dms values.
@@ -22,7 +28,7 @@ Changes
            but original Geo::Hash returns 
             [ [ $lat_max, $lat_min ], [ $lon_max, $lon_min ] ]
            so the return value was changed to return the same thing
-           as Geo::Hash
+           as Geo::Hash (hiratara)
     * Changed t/900_compat tests so that the test files are generated
       when Makefile.PL runs
 
