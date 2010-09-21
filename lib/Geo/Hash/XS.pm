@@ -4,6 +4,7 @@ use XSLoader;
 use Exporter 'import';
 our @EXPORT_OK = qw( ADJ_TOP ADJ_RIGHT ADJ_LEFT ADJ_BOTTOM );
 our %EXPORT_TAGS = (adjacent => \@EXPORT_OK);
+use 5.008001;
 
 our $VERSION = '0.00012';
 XSLoader::load __PACKAGE__, $VERSION;
