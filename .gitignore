@@ -2,4 +2,3 @@ Makefile
 inc/
 ppport.h
 xs/geohash.c
-xt/compat/
