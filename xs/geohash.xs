@@ -4,6 +4,7 @@
 #define NEED_sv_2pv_flags_GLOBAL
 #include "ppport.h"
 #include <math.h>
+#include "xshelper.h"
 
 static char PIECES[32] = {
     '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
@@ -11,7 +12,8 @@ static char PIECES[32] = {
     'n', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
 };
 
-static void
+STATIC_INLINE
+void
 encode(char *buf, STRLEN precision, NV lat, NV lon) {
     IV which = 0;
     STRLEN count = 0;
@@ -50,7 +52,8 @@ encode(char *buf, STRLEN precision, NV lat, NV lon) {
     buf[count] = '\0';
 }
 
-static void
+STATIC_INLINE
+void
 decode_to_interval(char *hash, STRLEN len, NV *lat_min_out, NV *lat_max_out, NV *lon_min_out, NV *lon_max_out) {
     STRLEN i, j;
     IV which = 0, min_or_max;
@@ -106,6 +109,7 @@ decode_to_interval(char *hash, STRLEN len, NV *lat_min_out, NV *lat_max_out, NV 
     *lon_max_out = lon_max;
 }
 
+STATIC_INLINE
 void
 decode(char *hash, IV len, NV *lat, NV *lon) {
     NV lat_min = 0, lat_max = 0, lon_min = 0, lon_max = 0;
@@ -132,7 +136,8 @@ static char* BORDERS[4][2] = {
 #define LOG2_OF_180 7.49185309632967
 #define LOG2_OF_360 8.49185309632968
 
-static IV
+STATIC_INLINE
+IV
 bits_for_number(char *number) {
     for(; *number != '\0'; number++){
         if(*number == '.'){
@@ -143,7 +148,8 @@ bits_for_number(char *number) {
     return 0;
 }
 
-static IV
+STATIC_INLINE
+IV
 precision(SV *lat, SV *lon) {
     IV lab = bits_for_number(SvPV_nolen(lat)) + 8;  /* 8 > log_2(180) */
     IV lob = bits_for_number(SvPV_nolen(lon)) + 9;  /* 9 > log_2(360) */
@@ -161,7 +167,8 @@ enum GH_DIRECTION {
 
 /* need to free this return value! */
 #define HASHBASE_BUFSIZ 8192
-static char *
+STATIC_INLINE
+char *
 adjacent(char *hash, STRLEN hashlen, enum GH_DIRECTION direction) {
     char base[HASHBASE_BUFSIZ];
     char last_ch = hash[ hashlen - 1 ];
@@ -193,7 +200,8 @@ adjacent(char *hash, STRLEN hashlen, enum GH_DIRECTION direction) {
     return ret;
 }
 
-static void
+STATIC_INLINE
+void
 neighbors(char *hash, STRLEN hashlen, int around, int offset, char ***neighbors, int *nsize) {
     char *xhash;
     STRLEN xhashlen = hashlen;
