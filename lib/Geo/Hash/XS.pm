@@ -82,33 +82,33 @@ Used to specify the direction in C<adjacent()>
 Here's the output from running benchmark/encode.pl:
 
     Geo::Hash: 0.02
-    Geo::Hash::XS: 0.00006
-    
+    Geo::Hash::XS: 0.00014
+
     precision = auto...
-              Rate   perl     xs
-    perl   19638/s     --   -99%
-    xs   2639682/s 13341%     --
+             Rate  perl    xs
+    perl  18332/s    --  -98%
+    xs   964744/s 5163%    --
     
     precision = 5...
-              Rate   perl     xs
-    perl   17600/s     --   -99%
-    xs   2479507/s 13988%     --
+              Rate  perl    xs
+    perl   16500/s    --  -98%
+    xs   1011557/s 6030%    --
     
     precision = 10...
-              Rate   perl     xs
-    perl    9286/s     --  -100%
-    xs   2039615/s 21864%     --
+             Rate   perl     xs
+    perl   8650/s     --   -99%
+    xs   980236/s 11232%     --
     
     precision = 20...
-              Rate   perl     xs
-    perl    4884/s     --  -100%
-    xs   1622943/s 33132%     --
+             Rate   perl     xs
+    perl   4736/s     --   -99%
+    xs   858875/s 18035%     --
     
     precision = 30...
-              Rate   perl     xs
-    perl    3254/s     --  -100%
-    xs   1257127/s 38532%     --
-
+             Rate   perl     xs
+    perl   3050/s     --  -100%
+    xs   712136/s 23252%     --
+    
 Obviously, the benefit of doing this calculation in XS becomes larger with
 higher precision, but generaly you don't need precision > 10.
 
