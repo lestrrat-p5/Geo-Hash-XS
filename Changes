@@ -1,6 +1,9 @@
 Changes
 =======
 
+0.00015 - Aug 29 2012
+    * Fix MANIFEST
+
 0.00014 - Aug 29 2012
     * Update contents of inc/
     * Apply STATIC_INLINE all over the place
