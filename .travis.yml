@@ -2,6 +2,6 @@ language: perl
 perl:
   - "5.14"
   - "5.12"
-install: "perl ./travis.PL"
+install: "perl ./.travis.PL"
 
 
